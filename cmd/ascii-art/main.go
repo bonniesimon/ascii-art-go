@@ -34,6 +34,6 @@ func getImageFromFilePath(path string) (image.Image, error) {
 }
 
 func main() {
-	height, width := getImageSize("img.jpg")
-	fmt.Println(height, width)
+	imageHeight, imageWidth := getImageSize("img.jpg")
+	fmt.Println(imageHeight, imageWidth)
 }
