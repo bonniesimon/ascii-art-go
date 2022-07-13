@@ -8,19 +8,8 @@ import (
 	"os"
 )
 
-func readImageFile(path string) *os.File {
-	file, err := os.Open(path)
-	fmt.Printf("File type %T\n", file)
-	if err != nil {
-		return nil
-	}
-	defer file.Close()
-	return file
-}
-
 func getImageSize(path string) (height int, width int) {
 	file, err := os.Open(path)
-	fmt.Printf("File type %T\n", file)
 	if err != nil {
 		log.Fatal("Error: ", err, "\n")
 	}
@@ -29,7 +18,6 @@ func getImageSize(path string) (height int, width int) {
 	if err != nil {
 		log.Fatal("Error: ", err, "\n")
 	}
-	fmt.Println("Config: ", config)
 	return config.Height, config.Width
 }
 
@@ -46,8 +34,6 @@ func getImageFromFilePath(path string) (image.Image, error) {
 }
 
 func main() {
-	fmt.Println("Hello world!")
-	// file := readImageFile("img.jpg")
 	height, width := getImageSize("img.jpg")
 	fmt.Println(height, width)
 }
