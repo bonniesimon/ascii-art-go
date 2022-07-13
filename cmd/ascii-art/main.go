@@ -8,32 +8,20 @@ import (
 	"os"
 )
 
-func getImageSize(path string) (height int, width int) {
+func getImageFromFilePath(path string) image.Image {
 	file, err := os.Open(path)
 	if err != nil {
 		log.Fatal("Error: ", err, "\n")
 	}
 	defer file.Close()
-	config, _, err := image.DecodeConfig(file)
-	if err != nil {
-		log.Fatal("Error: ", err, "\n")
-	}
-	return config.Height, config.Width
-}
-
-func getImageFromFilePath(path string) (image.Image, error) {
-	file, err := os.Open(path)
-	fmt.Printf("%T", file)
-	if err != nil {
-		return nil, err
-	}
-	defer file.Close()
-	img, x, err := image.Decode(file)
-	fmt.Println("\nType: ", x)
-	return img, err
+	img, _, err := image.Decode(file)
+	return img
 }
 
 func main() {
-	imageHeight, imageWidth := getImageSize("img.jpg")
-	fmt.Println(imageHeight, imageWidth)
+	var imageFilePath string = "img.jpg"
+	img := getImageFromFilePath(imageFilePath)
+	fmt.Printf("%T\n", img.Bounds())
+	fmt.Printf("Size: %d * %d\n", img.Bounds().Max.X, img.Bounds().Max.Y)
+	fmt.Println(img.At(0, 0))
 }
