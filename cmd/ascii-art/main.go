@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"image"
+	"image/color"
 	_ "image/jpeg"
 	"log"
 	"os"
@@ -18,15 +19,23 @@ func getImageFromFilePath(path string) image.Image {
 	return img
 }
 
-func averageFilter(r, g, b uint32) int {
-	return (int(r) + int(g) + int(b)) / 3
+func getPixelsFromImg(img image.Image) [][]color.RGBA {
+	var pixels [][]color.RGBA
+
+	for i := 0; i < img.Bounds().Size().X; i++ {
+		var y []color.RGBA
+		for j := 0; j < img.Bounds().Size().Y; j++ {
+			var c color.RGBA = color.RGBAModel.Convert(img.At(i, j)).(color.RGBA)
+			y = append(y, c)
+		}
+		pixels = append(pixels, y)
+	}
+
+	return pixels
 }
 
-func rgba2rgb(r, g, b, a uint32) {
-	red := a * r
-	green := a * g
-	blue := a * b
-	fmt.Println(red, " ", green, " ", blue)
+func averageFilter(r, g, b uint32) int {
+	return (int(r) + int(g) + int(b)) / 3
 }
 
 func main() {
@@ -36,21 +45,14 @@ func main() {
 	var imageHeight, imageWidth int = img.Bounds().Max.Y, img.Bounds().Max.X
 	fmt.Printf("Size: %d * %d\n", imageWidth, imageHeight)
 
-	// var brightnessMatrix [][]int
+	size := img.Bounds().Size()
 
-	// Get Pixel values
-	for y := img.Bounds().Min.Y; y < img.Bounds().Max.Y; y++ {
-		for x := img.Bounds().Min.X; x < img.Bounds().Max.X; x++ {
-			fmt.Printf("%d\n", img.At(x, y))
-			r, g, b, a := img.At(x, y).RGBA()
-			rgba2rgb(r, g, b, a)
-			fmt.Println(((r >> 8) & 0xFF))
-			fmt.Printf("r: %T\n", r)
-			fmt.Printf("r: %d g: %d b: %d", r, g, b)
-			// fmt.Println(int(r), " ", int(g), " ", int(b))
-			fmt.Println(averageFilter(r, g, b))
-			break
+	var pixels [][]color.RGBA = getPixelsFromImg(img)
+
+	for i := 0; i < size.X; i++ {
+		for j := 0; j < size.Y; j++ {
+			fmt.Printf("R: %d G: %d B: %d\n", pixels[i][j].R, pixels[i][j].G, pixels[i][j].B)
 		}
-		break
 	}
+
 }
