@@ -34,7 +34,7 @@ func getPixelsFromImg(img image.Image) [][]color.RGBA {
 	return pixels
 }
 
-func getBrightnessMatrix(pixels [][]color.RGBA, size image.Point) [][]uint8 {
+func getBrightnessMatrix(pixels [][]color.RGBA, size image.Point, filter func(r, g, b float64) float64) [][]uint8 {
 	var bMatrix [][]uint8
 	for i := 0; i < size.X; i++ {
 		var row []uint8
@@ -42,7 +42,7 @@ func getBrightnessMatrix(pixels [][]color.RGBA, size image.Point) [][]uint8 {
 			r := float64(pixels[i][j].R)
 			g := float64(pixels[i][j].G)
 			b := float64(pixels[i][j].B)
-			grey := uint8((r + g + b) / 3)
+			grey := uint8(filter(r, g, b))
 			row = append(row, grey)
 		}
 		bMatrix = append(bMatrix, row)
@@ -51,8 +51,8 @@ func getBrightnessMatrix(pixels [][]color.RGBA, size image.Point) [][]uint8 {
 	return bMatrix
 }
 
-func averageFilter(r, g, b uint32) int {
-	return (int(r) + int(g) + int(b)) / 3
+func averageFilter(r, g, b float64) float64 {
+	return (r + g + b) / 3
 }
 
 func main() {
@@ -65,7 +65,7 @@ func main() {
 	size := img.Bounds().Size()
 
 	var pixels [][]color.RGBA = getPixelsFromImg(img)
-	var bMatrix [][]uint8 = getBrightnessMatrix(pixels, size)
+	var bMatrix [][]uint8 = getBrightnessMatrix(pixels, size, averageFilter)
 
 	for i := 0; i < size.X; i++ {
 		for j := 0; j < size.Y; j++ {
