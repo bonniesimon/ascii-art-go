@@ -88,7 +88,7 @@ func main() {
 	var bMatrix [][]uint8 = getBrightnessMatrix(pixels, size, averageFilter)
 
 	str := getBrightnessCharMatrix(bMatrix)
-	fmt.Print(str)
+
 	for i := 0; i < size.X; i++ {
 		for j := 0; j < size.Y; j++ {
 			// fmt.Println(img.At(i, j))
