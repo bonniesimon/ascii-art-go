@@ -9,6 +9,8 @@ import (
 	"os"
 )
 
+const BRIGHTNESS_CHARS string = "`^\",:;Il!i~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$"
+
 func getImageFromFilePath(path string) image.Image {
 	file, err := os.Open(path)
 	if err != nil {
@@ -55,6 +57,24 @@ func averageFilter(r, g, b float64) float64 {
 	return (r + g + b) / 3
 }
 
+func getBrightnessCharMatrix(bMatrix [][]uint8) [][]string {
+	var brightnessValue uint8
+	var bCharMatrix [][]string
+	for i := 0; i < len(bMatrix)-1; i++ {
+		var row []string
+		for j := 0; j < len(bMatrix[i]); j++ {
+			brightnessValue = bMatrix[i][j]
+			bCharIndex := int(float64(brightnessValue) / 256.00 * float64(len(BRIGHTNESS_CHARS)))
+			if bCharIndex == len(BRIGHTNESS_CHARS) {
+				bCharIndex--
+			}
+			row = append(row, string(BRIGHTNESS_CHARS[bCharIndex]))
+		}
+		bCharMatrix = append(bCharMatrix, row)
+	}
+	return bCharMatrix
+}
+
 func main() {
 	var imageFilePath string = "img.jpg"
 	img := getImageFromFilePath(imageFilePath)
@@ -67,15 +87,20 @@ func main() {
 	var pixels [][]color.RGBA = getPixelsFromImg(img)
 	var bMatrix [][]uint8 = getBrightnessMatrix(pixels, size, averageFilter)
 
+	str := getBrightnessCharMatrix(bMatrix)
+	fmt.Print(str)
 	for i := 0; i < size.X; i++ {
 		for j := 0; j < size.Y; j++ {
 			// fmt.Println(img.At(i, j))
-			fmt.Println(bMatrix[i][j])
-			if j == 6 {
-				break
-			}
+			// fmt.Println(bMatrix[i][j])
+			// fmt.Printf("%d ", bMatrix[i][j])
+			fmt.Printf("%s", str[i][j])
+			// if j == 100 {
+			// 	break
+			// }
 		}
-		break
+		fmt.Print("\n")
+		// break
 	}
 
 }
