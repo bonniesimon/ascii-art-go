@@ -94,7 +94,7 @@ func main() {
 			// fmt.Println(img.At(i, j))
 			// fmt.Println(bMatrix[i][j])
 			// fmt.Printf("%d ", bMatrix[i][j])
-			fmt.Printf("%s", str[i][j])
+			fmt.Printf("%s%s%s", str[i][j], str[i][j], str[i][j])
 			// if j == 100 {
 			// 	break
 			// }
