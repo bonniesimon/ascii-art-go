@@ -91,16 +91,9 @@ func main() {
 
 	for i := 0; i < size.X; i++ {
 		for j := 0; j < size.Y; j++ {
-			// fmt.Println(img.At(i, j))
-			// fmt.Println(bMatrix[i][j])
-			// fmt.Printf("%d ", bMatrix[i][j])
 			fmt.Printf("%s%s%s", str[i][j], str[i][j], str[i][j])
-			// if j == 100 {
-			// 	break
-			// }
 		}
 		fmt.Print("\n")
-		// break
 	}
 
 }
